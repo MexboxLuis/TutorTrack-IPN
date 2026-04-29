@@ -63,9 +63,10 @@ import com.example.pitapp.ui.features.classes.helpers.findLastTheoreticalSession
 import com.example.pitapp.ui.features.classes.helpers.formatSessionTime
 import com.example.pitapp.ui.features.classes.helpers.nextSessionTime
 import com.example.pitapp.ui.shared.components.EmptyState
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
+import com.example.pitapp.core.devicepolicy.canonicalZoneId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.ZoneId
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -91,7 +92,7 @@ fun UpcomingSchedules(
         scope.launch {
             fireStoreManager.getCurrentSchedules(tutorEmail) { result ->
                 result.onSuccess { schedules ->
-                    val now = Calendar.getInstance()
+                    val now = Calendar.getInstance(canonicalTimeZone())
 
                     val lastTheoreticalSessionMap = schedules.associateWith { schedule ->
                         findLastTheoreticalSession(schedule)
@@ -108,7 +109,7 @@ fun UpcomingSchedules(
                                         sessionTime == lastTheoreticalPair.second
 
                                 val sessionDate =
-                                    sessionTime.toInstant().atZone(ZoneId.systemDefault())
+                                    sessionTime.toInstant().atZone(canonicalZoneId())
                                         .toLocalDate()
 
                                 val type = when {

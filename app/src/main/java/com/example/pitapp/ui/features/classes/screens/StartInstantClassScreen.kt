@@ -78,13 +78,14 @@ import com.example.pitapp.ui.features.classes.components.NoClassInfoMessageCard
 import com.example.pitapp.ui.features.classes.components.UpcomingSchedules
 import com.example.pitapp.ui.shared.components.BackScaffold
 import com.example.pitapp.ui.shared.formatting.formatTitleCase
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
+import com.example.pitapp.core.devicepolicy.canonicalZoneId
 import com.google.firebase.Timestamp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -157,7 +158,7 @@ fun StartInstantClassScreen(
     LaunchedEffect(currentSchedules.value, classCreated.value) {
         if (classCreated.value) return@LaunchedEffect
 
-        val now = Calendar.getInstance()
+        val now = Calendar.getInstance(canonicalTimeZone())
         val currentYear = now.get(Calendar.YEAR)
         val currentMonth = now.get(Calendar.MONTH) + 1
         val currentDayOfWeek = now.get(Calendar.DAY_OF_WEEK)
@@ -177,7 +178,7 @@ fun StartInstantClassScreen(
             }
             for (session in schedule.sessions) {
                 if (session.dayOfWeek == adaptedDayOfWeek) {
-                    val sessionStartTime = Calendar.getInstance().apply {
+                    val sessionStartTime = Calendar.getInstance(canonicalTimeZone()).apply {
                         set(Calendar.HOUR_OF_DAY, session.startTime)
                         set(Calendar.MINUTE, 0)
                         set(Calendar.SECOND, 0)
@@ -213,7 +214,7 @@ fun StartInstantClassScreen(
 
         if (now.timeInMillis < targetSessionStartTime.timeInMillis) {
             while (true) {
-                val currentTime = Calendar.getInstance()
+                val currentTime = Calendar.getInstance(canonicalTimeZone())
                 val diffMillis = targetSessionStartTime.timeInMillis - currentTime.timeInMillis
                 if (diffMillis <= 0) break
                 val hours = TimeUnit.MILLISECONDS.toHours(diffMillis)
@@ -228,7 +229,7 @@ fun StartInstantClassScreen(
         }
 
         while (true) {
-            val currentTime = Calendar.getInstance()
+            val currentTime = Calendar.getInstance(canonicalTimeZone())
             val diffMillis = targetSessionEndTime!!.timeInMillis - currentTime.timeInMillis
             if (diffMillis <= 0) {
                 navController.navigate("startInstantClassScreen") {
@@ -249,7 +250,7 @@ fun StartInstantClassScreen(
 
     fun Timestamp.toLocalDate(): LocalDate {
         return Instant.ofEpochMilli(this.seconds * 1000)
-            .atZone(ZoneId.systemDefault())
+            .atZone(canonicalZoneId())
             .toLocalDate()
     }
 
@@ -295,7 +296,7 @@ fun StartInstantClassScreen(
                         ?.toLocalDate()
                         ?.let { endLocalDate ->
                             SimpleDateFormat("dd '${context.getString(R.string.of)}' MMMM", Locale.getDefault())
-                                .format(Date.from(endLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                                .format(Date.from(endLocalDate.atStartOfDay(canonicalZoneId()).toInstant()))
                         }
                         ?: "—"
 

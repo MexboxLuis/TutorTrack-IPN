@@ -1,5 +1,6 @@
 package com.example.pitapp.ui.features.classes.helpers
 
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import com.example.pitapp.model.Schedule
 import com.example.pitapp.model.Session
 import java.util.Calendar
@@ -61,7 +62,7 @@ fun findLastTheoreticalSession(schedule: Schedule): Pair<Session, Calendar>? {
         return null
     }
 
-    val endCal = Calendar.getInstance().apply {
+    val endCal = Calendar.getInstance(canonicalTimeZone()).apply {
         clear()
         set(Calendar.YEAR, schedule.endYear)
         set(Calendar.MONTH, schedule.endMonth - 1)
@@ -92,7 +93,7 @@ fun findLastTheoreticalSession(schedule: Schedule): Pair<Session, Calendar>? {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
 
-            val startCal = Calendar.getInstance().apply {
+            val startCal = Calendar.getInstance(canonicalTimeZone()).apply {
                 clear()
                 set(Calendar.YEAR, schedule.startYear)
                 set(Calendar.MONTH, schedule.startMonth - 1)
@@ -104,7 +105,7 @@ fun findLastTheoreticalSession(schedule: Schedule): Pair<Session, Calendar>? {
             }
         }
 
-        val startCheckCal = Calendar.getInstance().apply {
+        val startCheckCal = Calendar.getInstance(canonicalTimeZone()).apply {
             clear()
             set(Calendar.YEAR, schedule.startYear)
             set(Calendar.MONTH, schedule.startMonth - 1)

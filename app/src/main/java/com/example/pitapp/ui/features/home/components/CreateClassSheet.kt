@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pitapp.R
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -33,7 +34,7 @@ fun CreateClassSheet(
     val context = LocalContext.current
 
     fun hasClassInProgress(classes: List<Pair<String, SavedClass>>): Pair<Boolean, String?> {
-        val currentCalendar = Calendar.getInstance()
+        val currentCalendar = Calendar.getInstance(canonicalTimeZone())
         val currentYear = currentCalendar.get(Calendar.YEAR)
         val currentDayOfYear = currentCalendar.get(Calendar.DAY_OF_YEAR)
         val currentHourStartMillis = currentCalendar.apply {
@@ -43,7 +44,7 @@ fun CreateClassSheet(
         }.timeInMillis
 
         for ((id, savedClass) in classes) {
-            val classCalendar = Calendar.getInstance().apply { time = savedClass.date.toDate() }
+            val classCalendar = Calendar.getInstance(canonicalTimeZone()).apply { time = savedClass.date.toDate() }
             val classYear = classCalendar.get(Calendar.YEAR)
             val classDayOfYear = classCalendar.get(Calendar.DAY_OF_YEAR)
             val classHourStartMillis = classCalendar.apply {

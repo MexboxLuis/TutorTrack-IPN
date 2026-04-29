@@ -50,6 +50,7 @@ import com.example.pitapp.ui.features.scheduling.components.DaysOfWeekSelection
 import com.example.pitapp.ui.features.scheduling.components.MonthDropdown
 import com.example.pitapp.ui.features.scheduling.helpers.createSessions
 import com.example.pitapp.ui.shared.components.BackScaffold
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -63,8 +64,8 @@ fun EditScheduleScreen(
     fireStoreManager: FireStoreManager,
     scheduleId: String?
 ) {
-    val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
-    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    val currentMonth = Calendar.getInstance(canonicalTimeZone()).get(Calendar.MONTH) + 1
+    val currentYear = Calendar.getInstance(canonicalTimeZone()).get(Calendar.YEAR)
     val context = LocalContext.current
 
     var subjectState by remember { mutableStateOf("") }
@@ -111,6 +112,7 @@ fun EditScheduleScreen(
     val errorLoadingSchedule = remember { mutableStateOf<String?>(null) }
 
     var overlapMessage by remember { mutableStateOf("") }
+    var hasAttemptedSubmit by remember { mutableStateOf(false) }
 
     LaunchedEffect(scheduleId) {
         if (scheduleId != null) {
@@ -164,12 +166,15 @@ fun EditScheduleScreen(
         }
     }
 
-    fun validateForm(): Boolean {
+    fun validateForm(showErrors: Boolean = false): Boolean {
         var isValid = true
+        val show = showErrors || hasAttemptedSubmit
 
         if (selectedClassroom == null) {
-            classroomError = true
-            classroomErrorText = context.getString(R.string.classroom_required)
+            if (show) {
+                classroomError = true
+                classroomErrorText = context.getString(R.string.classroom_required)
+            }
             isValid = false
         } else {
             classroomError = false
@@ -177,8 +182,10 @@ fun EditScheduleScreen(
         }
 
         if (subjectState.isBlank()) {
-            subjectError = true
-            subjectErrorText = context.getString(R.string.subject_required)
+            if (show || subjectState.isEmpty().not()) {
+                subjectError = true
+                subjectErrorText = context.getString(R.string.subject_required)
+            }
             isValid = false
         } else {
             subjectError = false
@@ -189,8 +196,10 @@ fun EditScheduleScreen(
         val startYear = startYearState.toIntOrNull()
 
         if (startMonth == null) {
-            startMonthError = true
-            startMonthErrorText = context.getString(R.string.invalid_months)
+            if (show) {
+                startMonthError = true
+                startMonthErrorText = context.getString(R.string.invalid_months)
+            }
             isValid = false
         } else if (startYear != null && (
                     startYear < currentYear || (startYear == currentYear && startMonth < currentMonth))
@@ -204,8 +213,10 @@ fun EditScheduleScreen(
         }
 
         if (startYear == null) {
-            startYearError = true
-            startYearErrorText = context.getString(R.string.invalid_year)
+            if (show || startYearState.isNotEmpty()) {
+                startYearError = true
+                startYearErrorText = context.getString(R.string.invalid_year)
+            }
             isValid = false
         } else {
             startYearError = false
@@ -214,8 +225,10 @@ fun EditScheduleScreen(
 
         val endMonth = endMonthState.toIntOrNull()
         if (endMonth == null) {
-            endMonthError = true
-            endMonthErrorText = context.getString(R.string.invalid_months)
+            if (show) {
+                endMonthError = true
+                endMonthErrorText = context.getString(R.string.invalid_months)
+            }
             isValid = false
         } else {
             endMonthError = false
@@ -224,8 +237,10 @@ fun EditScheduleScreen(
 
         val endYear = endYearState.toIntOrNull()
         if (endYear == null || endYear < currentYear) {
-            endYearError = true
-            endYearErrorText = context.getString(R.string.invalid_year)
+            if (show || endYearState.isNotEmpty()) {
+                endYearError = true
+                endYearErrorText = context.getString(R.string.invalid_year)
+            }
             isValid = false
         } else {
             endYearError = false
@@ -241,8 +256,10 @@ fun EditScheduleScreen(
         }
 
         if (!selectedDays.values.any { it }) {
-            daysError = true
-            daysErrorText = context.getString(R.string.at_least_one_day)
+            if (show) {
+                daysError = true
+                daysErrorText = context.getString(R.string.at_least_one_day)
+            }
             isValid = false
         } else {
             daysError = false
@@ -254,7 +271,9 @@ fun EditScheduleScreen(
                 val hour = sessionsState[day]?.toIntOrNull()
                 if (hour == null || hour !in 7..19) {
                     isValid = false
-                    sessionErrorStates[day] = true
+                    if (show || sessionsState[day]?.isNotEmpty() == true) {
+                        sessionErrorStates[day] = true
+                    }
                 } else {
                     sessionErrorStates[day] = false
                 }
@@ -415,7 +434,8 @@ fun EditScheduleScreen(
 
                 OutlinedButton(
                     onClick = {
-                        if (isFormValid) {
+                        hasAttemptedSubmit = true
+                        if (validateForm(showErrors = true)) {
 
                             val updatedSchedule = Schedule(
                                 classroomId = selectedClassroom!!.number.toString(),

@@ -51,11 +51,11 @@ import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.WeekFields
 import java.util.Calendar
 import java.util.Locale
+import com.example.pitapp.core.devicepolicy.canonicalZoneId
 
 data class TutorWithClasses(
     val tutorInfo: UserData,
@@ -108,7 +108,7 @@ fun TutorClassesScreen(
             val studentsInPeriod = mutableListOf<SavedStudent>()
             tutor.allPastClassesWithStudents.forEach { (classId, savedClass) ->
                 val classLocalDate = savedClass.date.toDate().toInstant()
-                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                    .atZone(canonicalZoneId()).toLocalDate()
                 val isInPeriod = isDateInPeriod(
                     classLocalDate,
                     selectedDateForSummary,
@@ -474,7 +474,7 @@ fun TutorClassesScreen(
                                             .filter { (_, savedClass) ->
                                                 val classLocalDate =
                                                     savedClass.date.toDate().toInstant()
-                                                        .atZone(ZoneId.systemDefault())
+                                                        .atZone(canonicalZoneId())
                                                         .toLocalDate()
                                                 isDateInPeriod(
                                                     classLocalDate,

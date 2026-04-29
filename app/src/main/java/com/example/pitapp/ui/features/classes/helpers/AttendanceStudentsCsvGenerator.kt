@@ -2,6 +2,7 @@ package com.example.pitapp.ui.features.classes.helpers
 
 import android.content.Context
 import com.example.pitapp.R
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import com.example.pitapp.model.SavedClass
 import com.example.pitapp.model.SavedStudent
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
@@ -55,7 +56,7 @@ fun generateStudentsCsv(
 
                 val startHour = hourFmt.format(classDate)
                 val endHour = hourFmt.format(
-                    Calendar.getInstance().apply {
+                    Calendar.getInstance(canonicalTimeZone()).apply {
                         time = classDate; add(Calendar.HOUR_OF_DAY, 1)
                     }.time
                 )

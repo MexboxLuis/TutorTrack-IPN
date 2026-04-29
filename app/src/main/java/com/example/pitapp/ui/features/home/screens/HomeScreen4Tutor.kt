@@ -84,11 +84,12 @@ import com.example.pitapp.ui.features.classes.helpers.shareFile
 import com.example.pitapp.ui.features.home.components.CreateClassSheet
 import com.example.pitapp.ui.features.home.components.TutorScaffold
 import com.example.pitapp.ui.shared.components.EmptyState
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
+import com.example.pitapp.core.devicepolicy.canonicalZoneId
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.WeekFields
 import java.util.Calendar
@@ -167,9 +168,9 @@ fun HomeScreen4Tutor(
         currentTimeMillis.longValue
     ) {
         val visibleIds = instantClasses.value.filter { (_, savedClass) ->
-            val classCalendar = Calendar.getInstance().apply { time = savedClass.date.toDate() }
+            val classCalendar = Calendar.getInstance(canonicalTimeZone()).apply { time = savedClass.date.toDate() }
             val currentCalendar =
-                Calendar.getInstance().apply { timeInMillis = currentTimeMillis.longValue }
+                Calendar.getInstance(canonicalTimeZone()).apply { timeInMillis = currentTimeMillis.longValue }
             val isSameDay =
                 classCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
                         classCalendar.get(Calendar.DAY_OF_YEAR) == currentCalendar.get(Calendar.DAY_OF_YEAR)
@@ -203,9 +204,9 @@ fun HomeScreen4Tutor(
     }
 
     val visibleInstantClasses = instantClasses.value.filter { (_, savedClass) ->
-        val classCalendar = Calendar.getInstance().apply { time = savedClass.date.toDate() }
+        val classCalendar = Calendar.getInstance(canonicalTimeZone()).apply { time = savedClass.date.toDate() }
         val currentCalendar =
-            Calendar.getInstance().apply { timeInMillis = currentTimeMillis.longValue }
+            Calendar.getInstance(canonicalTimeZone()).apply { timeInMillis = currentTimeMillis.longValue }
         val isSameDay = classCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
                 classCalendar.get(Calendar.DAY_OF_YEAR) == currentCalendar.get(Calendar.DAY_OF_YEAR)
         val classHourStartMillis = classCalendar.apply {
@@ -243,7 +244,7 @@ fun HomeScreen4Tutor(
                 } catch (_: Exception) {
                     null
                 }
-                val classLocalDate = classDate?.toInstant()?.atZone(ZoneId.systemDefault())
+                val classLocalDate = classDate?.toInstant()?.atZone(canonicalZoneId())
                     ?.toLocalDate()
 
                 val isInPeriod = if (classLocalDate == null) {

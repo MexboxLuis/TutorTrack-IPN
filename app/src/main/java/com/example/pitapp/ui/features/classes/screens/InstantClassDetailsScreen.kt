@@ -62,6 +62,7 @@ import com.example.pitapp.ui.shared.components.EmptyState
 import com.example.pitapp.ui.shared.screens.LoadingScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -121,7 +122,7 @@ fun InstantClassDetailsScreen(
         if (classDetails.value == null) return@LaunchedEffect
 
         val classActualStartTime = classDetails.value!!.date.toDate()
-        val classActualStartCal = Calendar.getInstance().apply { time = classActualStartTime }
+        val classActualStartCal = Calendar.getInstance(canonicalTimeZone()).apply { time = classActualStartTime }
 
         val conceptualClassStartCal = (classActualStartCal.clone() as Calendar).apply {
             set(Calendar.MINUTE, 0)
@@ -144,7 +145,7 @@ fun InstantClassDetailsScreen(
         val addStudentWindowDurationMillis = 45 * 60 * 1000L
 
         while (true) {
-            val now = Calendar.getInstance()
+            val now = Calendar.getInstance(canonicalTimeZone())
             val nowMillis = now.timeInMillis
 
             val classDiffMillis = conceptualClassEndMillis - nowMillis

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.pitapp.R
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import com.example.pitapp.ui.features.classes.screens.TutorWithClasses
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import java.io.File
@@ -58,7 +59,7 @@ fun generateGlobalPeerTutoringSummaryCsv(
                     val tutorFullName = "${tutorInfo.name} ${tutorInfo.surname}".trim()
 
                     val startHour = hourFmt.format(classDate)
-                    val endHourCalendar = Calendar.getInstance().apply {
+                    val endHourCalendar = Calendar.getInstance(canonicalTimeZone()).apply {
                         time = classDate
                         add(Calendar.HOUR_OF_DAY, 1)
                     }

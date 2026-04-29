@@ -102,23 +102,15 @@ fun TimePolicyScreen(
                         )
 
                         val zoneText =
-                            if (policy.isMexicoCityZone) stringResource(R.string.time_policy_zone_ok) else stringResource(
+                            if (policy.isValidMexicoZone) stringResource(R.string.time_policy_zone_ok) else stringResource(
                                 R.string.time_policy_zone_error,
                                 TimeZone.getDefault().id
                             )
 
                         StatusRow(
-                            isOk = policy.isMexicoCityZone,
+                            isOk = policy.isValidMexicoZone,
                             okLabel = zoneText,
                             errorLabel = zoneText,
-                            okColor = okColor,
-                            errorColor = errorColor
-                        )
-
-                        StatusRow(
-                            isOk = policy.isUtcMinus6Now,
-                            okLabel = stringResource(R.string.time_policy_offset_ok),
-                            errorLabel = stringResource(R.string.time_policy_offset_error),
                             okColor = okColor,
                             errorColor = errorColor
                         )

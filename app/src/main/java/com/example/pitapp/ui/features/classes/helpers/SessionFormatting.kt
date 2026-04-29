@@ -2,6 +2,7 @@ package com.example.pitapp.ui.features.classes.helpers
 
 import android.content.Context
 import com.example.pitapp.R
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import com.example.pitapp.model.Session
 import com.example.pitapp.ui.features.classes.components.FormattedTimeInfo
 import java.util.Calendar
@@ -9,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 
 fun formatSessionTime(context: Context, session: Session, sessionTime: Calendar): FormattedTimeInfo {
-    val now = Calendar.getInstance()
+    val now = Calendar.getInstance(canonicalTimeZone())
     val adaptedSessionDayOfWeek = if (session.dayOfWeek == 7) 1 else session.dayOfWeek + 1
     val dayOfWeekString = when (adaptedSessionDayOfWeek) {
         Calendar.MONDAY -> context.getString(R.string.day_mon)

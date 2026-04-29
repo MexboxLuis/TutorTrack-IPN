@@ -30,8 +30,13 @@ fun ClassroomInfo(classroomId: String) {
             modifier = Modifier.size(20.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
+        val classroomNumber = classroomId.toIntOrNull()
         Text(
-            text = stringResource(R.string.classroom_card_title_prefix, classroomId.toInt()),
+            text = if (classroomNumber != null) {
+                stringResource(R.string.classroom_card_title_prefix, classroomNumber)
+            } else {
+                stringResource(R.string.classroom_card_title_prefix, 0)
+            },
             style = MaterialTheme.typography.bodyMedium
         )
     }

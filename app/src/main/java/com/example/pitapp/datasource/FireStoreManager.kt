@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import com.example.pitapp.core.devicepolicy.canonicalTimeZone
 import java.util.Calendar
 import java.util.UUID
 
@@ -230,7 +231,7 @@ class FireStoreManager(
     }
 
     suspend fun addNonWorkingDay(date: Timestamp) {
-        val calendar = Calendar.getInstance().apply { time = date.toDate() }
+        val calendar = Calendar.getInstance(canonicalTimeZone()).apply { time = date.toDate() }
         val year = calendar.get(Calendar.YEAR).toString()
         val nonWorkingDaysRef = firestore.collection("saved_calendar")
             .document(year)
@@ -276,7 +277,7 @@ class FireStoreManager(
     }
 
     suspend fun deleteNonWorkingDay(date: Timestamp) = withContext(Dispatchers.IO) {
-        val calendar = Calendar.getInstance().apply { time = date.toDate() }
+        val calendar = Calendar.getInstance(canonicalTimeZone()).apply { time = date.toDate() }
         val year = calendar.get(Calendar.YEAR).toString()
         val nonWorkingDaysRef = firestore.collection("saved_calendar")
             .document(year)
@@ -295,7 +296,7 @@ class FireStoreManager(
     }
 
     suspend fun deletePeriod(period: Period) = withContext(Dispatchers.IO) {
-        val calendar = Calendar.getInstance().apply { time = period.startDate.toDate() }
+        val calendar = Calendar.getInstance(canonicalTimeZone()).apply { time = period.startDate.toDate() }
         val year = calendar.get(Calendar.YEAR).toString()
         val periodsRef = firestore.collection("saved_calendar")
             .document(year)
@@ -568,7 +569,7 @@ class FireStoreManager(
     }
 
     fun getCurrentSchedules(tutorEmail: String, callback: (Result<List<Schedule>>) -> Unit) {
-        val now = Calendar.getInstance()
+        val now = Calendar.getInstance(canonicalTimeZone())
         val currentYear = now.get(Calendar.YEAR)
         val currentMonth = now.get(Calendar.MONTH) + 1
 
