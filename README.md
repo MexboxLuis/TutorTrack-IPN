@@ -5,7 +5,7 @@
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Material 3](https://img.shields.io/badge/Material_3-6750A4?style=flat-square&logo=materialdesign&logoColor=white)](https://m3.material.io/)
 
-Native Android app that replaces paper attendance sheets for the **Programa Institucional de Tutorías** at Instituto Politécnico Nacional. Tutors scan QR codes, students check in, admins see everything in real time — **zero paper, zero Excel, zero "I forgot to sign the list"**.
+Native Android app for the **Programa Institucional de Tutorías** at Instituto Politécnico Nacional. Tutors scan QR codes, students check in, and admins manage attendance records in real time.
 
 ---
 
@@ -13,10 +13,10 @@ Native Android app that replaces paper attendance sheets for the **Programa Inst
 
 | Feature | Details |
 | --- | --- |
-| 🎯 **Purpose** | Digitize the entire attendance workflow for the PIT program — from schedule creation to CSV report generation — eliminating manual paper tracking. |
-| ⚙️ **Architecture** | Single Activity, 100 % Jetpack Compose, MVVM-ish with Firestore real-time listeners. No Fragments. |
+| 🎯 **Purpose** | Digitize attendance tracking for the PIT program, from schedule creation to CSV report generation. |
+| ⚙️ **Architecture** | Single-activity app built with Jetpack Compose, MVVM-ish structure, and Firestore real-time listeners. |
 | 💾 **Data** | Firebase Authentication (Email/Password), Cloud Firestore (real-time sync + offline cache), Firebase Storage (profile photos). |
-| 🔒 **Anti-Fraud** | Device policy enforcement: automatic date/time required + valid Mexican timezone — prevents manual clock manipulation. |
+| 🔒 **Anti-Fraud** | Device policy checks require automatic date/time and a valid Mexican timezone. |
 | 👥 **Roles** | Three tiers: **Admin** (full control), **Peer Tutor** (student who tutors), **Advisor** (teacher who advises). |
 
 ---
@@ -28,7 +28,7 @@ Native Android app that replaces paper attendance sheets for the **Programa Inst
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-4285F4?style=for-the-badge&logo=android&logoColor=white)
 
-- **Kotlin & Jetpack Compose:** Declarative UI with Material 3 design tokens, single `NavHost` navigation.
+- **Kotlin & Jetpack Compose:** Jetpack Compose UI with Material 3 components and a single `NavHost` navigation flow.
 - **ZXing (JourneyApps):** QR code scanning for instant student check-in.
 - **kotlin-csv:** Client-side CSV report generation.
 
@@ -38,7 +38,7 @@ Native Android app that replaces paper attendance sheets for the **Programa Inst
 ![Firestore](https://img.shields.io/badge/Firestore-039BE5?style=for-the-badge&logo=firebase&logoColor=white)
 
 - **Firebase Authentication:** Email/Password sign-in with role-based access.
-- **Cloud Firestore:** Real-time sync + offline cache — attendance records survive connectivity drops.
+- **Cloud Firestore:** Real-time sync with offline cache for attendance records.
 - **Firebase Storage:** Profile photo upload and management.
 
 ---
@@ -49,62 +49,24 @@ Native Android app that replaces paper attendance sheets for the **Programa Inst
 
 | Feature | Description |
 | :---: | :---: |
-| **QR Attendance** | Scan student credentials → validated and stored in < 2 seconds, with duplicate detection. |
-| **Smart Scheduling** | Create weekly schedules with automatic overlap detection for both classrooms and tutors. |
-| **Session Lifecycle** | 60-min countdown with a 45-min scan window — auto-closes when time expires. |
+| **QR Attendance** | Scan student credentials with validation and duplicate detection. |
+| **Scheduling** | Create weekly schedules with overlap detection for classrooms and tutors. |
+| **Session Lifecycle** | 60-minute session timer with a 45-minute scan window. |
 | **Role Separation** | Admin approves tutors and schedules. Peer tutors (students) and advisors (teachers) are tracked separately. |
 | **Academic Calendar** | Non-working days and exam periods are cross-referenced with schedules. |
-| **CSV Reports** | Per-tutor detail and global summary exports — ready for coordination delivery. |
-| **Device Policy** | AppGuard blocks usage unless automatic time is enabled and timezone is a valid Mexican zone. |
-| **Offline Resilience** | Firestore offline cache keeps recording attendance mid-session — syncs when internet returns. |
+| **Reports & CSV Export** | Attendance summaries with pie charts, per-tutor views, and CSV export. |
+| **Device Policy** | Usage is restricted unless automatic time is enabled and the timezone matches a valid Mexican zone. |
+| **Offline Sync** | Firestore offline cache allows attendance data to sync after connectivity is restored. |
 
 </div>
 
 ---
 
-## 📸 Screenshots
-
-### 🏠 Home — Admin & Tutor
+## 📸 View
 
 <p align="center">
-  <img src="assets/home.png" width="600"/><br>
-  <sub>Admin dashboard (left) • Tutor dashboard (right)</sub>
-</p>
-
----
-
-### 📋 Schedule Management
-
-<p align="center">
-  <img src="assets/schedules.png" width="600"/><br>
-  <sub>Schedule creation with conflict detection (left) • Admin approval flow (right)</sub>
-</p>
-
----
-
-### 🔲 QR Attendance
-
-<p align="center">
-  <img src="assets/qr_attendance.png" width="600"/><br>
-  <sub>QR scanner with countdown (left) • Live student list (right)</sub>
-</p>
-
----
-
-### 📊 Reports & History
-
-<p align="center">
-  <img src="assets/reports.png" width="600"/><br>
-  <sub>Peer tutoring summary with charts (left) • CSV export (right)</sub>
-</p>
-
----
-
-### 👥 Onboarding & Roles
-
-<p align="center">
-  <img src="assets/onboarding.png" width="600"/><br>
-  <sub>Tutor registration (left) • Real-time approval by admin (right)</sub>
+  <img src="assets/screenshots.png" width="900"/><br>
+  <sub>Each frame shows both perspectives side by side — Tutor (left, dark) and Admin (right, light)</sub>
 </p>
 
 ---
@@ -113,23 +75,16 @@ Native Android app that replaces paper attendance sheets for the **Programa Inst
 
 <p align="center">
 
-[![YouTube Demo](https://img.shields.io/badge/YouTube-Watch_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/YOUR_VIDEO_ID)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Watch_Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/Uh_GV_2lFNg)
 
 </p>
-
-<!-- Alternatively, embed the video directly: -->
-<!-- <p align="center">
-  <a href="https://youtu.be/YOUR_VIDEO_ID">
-    <img src="assets/demo_thumbnail.png" width="600"/>
-  </a>
-</p> -->
 
 ---
 
 ## 🏛️ Architecture
 
 ```
-100% Kotlin · Single Activity · Jetpack Compose · No Fragments
+Kotlin · Single Activity · Jetpack Compose
 ```
 
 ```
@@ -180,9 +135,9 @@ git clone https://github.com/MexboxLuis/PIT-IPN-App.git
 
 ---
 
-## 🔐 Device Policy & Anti-Fraud
+## 🔐 Device Policy
 
-The `AppGuard` system ensures data integrity by enforcing two conditions before allowing app usage:
+The app checks two device conditions before allowing usage:
 
 | Check | What it verifies | Why it matters |
 | --- | --- | --- |
@@ -228,7 +183,7 @@ Both checks consider:
 - The **date range** (startYear/startMonth → endYear/endMonth) must overlap
 - Within the overlapping period, at least one **session** shares the same `dayOfWeek` AND `startTime`
 
-Overlap is checked in real-time **before the admin even sees the request**, and again when the admin edits a schedule.
+Overlap is checked before schedule approval and again during schedule editing.
 
 ---
 
@@ -250,7 +205,7 @@ If this project were to scale beyond a single campus or move to production, thes
 
 | Area | Current State | What's Needed |
 | --- | --- | --- |
-| **CSV exports** | Client-side generation | Server-side generation via Cloud Functions for large datasets |
+| **Reports & CSV Export** | Attendance summaries with pie charts, per-tutor views, and CSV export | Server-side generation via Cloud Functions for large datasets |
 | **Analytics** | Basic pie charts (regular vs irregular) | Dashboard with trends over time, attendance rates, dropout predictions |
 | **Data retention** | No automatic cleanup | Archival policies for past semesters, GDPR/data protection compliance |
 
