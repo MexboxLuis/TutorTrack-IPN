@@ -15,5 +15,9 @@
 .cxx
 local.properties
 
-# Seed scripts (dev-only, requires serviceAccountKey.json)
-seed/
+# Firebase — NEVER commit these
+**/google-services.json
+
+# Seed scripts — private credentials
+seed/serviceAccountKey.json
+seed/node_modules/
