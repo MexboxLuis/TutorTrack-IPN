@@ -15,6 +15,5 @@
 .cxx
 local.properties
 
-# Seed script
-seed/serviceAccountKey.json
-seed/node_modules/
+# Seed scripts (dev-only, requires serviceAccountKey.json)
+seed/
